@@ -133,19 +133,21 @@ checkpoint      = ModelCheckpoint(filepath,
                             # Log the epoch detail into csv
 csv_logger      = CSVLogger(modelname +'.csv')
 callbacks_list  = [checkpoint,csv_logger,LRScheduler]
-
-model_train=model.fit([inpu2,diff,grad_xy,grad_xz,grad_yz], 
+model.save(filepath)
+model.fit([inpu2,diff,grad_xy,grad_xz,grad_yz], 
             outpu, 
             validation_data=([inpu2,diff,grad_xy,grad_xz,grad_yz], outpu), 
-            epochs=20, 
+            epochs=3, 
             batch_size=1,
             callbacks=callbacks_list)
-
+#model.save(filepath)
+model.save_weights(modelname + "_weight.hdf5")
 print(inpu[15].reshape(5,3))
 print(model.predict([inpu2,diff,grad_xy,grad_xz,grad_yz])[15].reshape(4,3)*reso )
 
-loss=model_train.history['loss']
-val_loss=model_train.history['val_loss']
+
+loss=model.history['loss']
+val_loss=model.history['val_loss']
 epochs = range(140)
 plt.figure()
 plt.plot(epochs, loss, 'bo', label='Training loss')
