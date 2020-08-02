@@ -54,11 +54,20 @@ x2a=UpSampling2D(size=(2, 2))(x2a)
 x3a=MaxPooling2D(pool_size=(4, 4), strides=(4,4))(inp)
 x3b=AveragePooling2D(pool_size=(4, 4), strides=(4,4))(inp)
 x3a=Concatenate()([x3b,x3a])
+x3a=Conv2D(16,kernel_size=(3,3), strides=(1,1),padding="same",activation='relu')(x3a)
 x3a=Concatenate()([x2a,x3a])
-x3a=UpSampling2D(size=(4, 4))(x3a)
-x3a=Concatenate()([inp,x3a])
+x3a=UpSampling2D(size=(2, 2))(x3a)
+#x3a=Concatenate()([inp,x3a])
 
-x=Conv2D(16,kernel_size=(3,3), strides=(1,1),padding="same",activation='relu')(x3a)
+x4a=MaxPooling2D(pool_size=(2, 2), strides=(2,2))(inp)
+x4b=AveragePooling2D(pool_size=(2, 2), strides=(2,2))(inp)
+x4a=Concatenate()([x4b,x4a])
+x4a=Conv2D(16,kernel_size=(3,3), strides=(1,1),padding="same",activation='relu')(x4a)
+x4a=Concatenate()([x3a,x4a])
+x4a=UpSampling2D(size=(2, 2))(x4a)
+x4a=Concatenate()([inp,x4a])
+
+x=Conv2D(16,kernel_size=(3,3), strides=(1,1),padding="same",activation='relu')(x4a)
 x=Conv2D(8,kernel_size=(3,3), strides=(1,1),padding="same",activation='relu')(x)
 x=Conv2D(4,kernel_size=(3,3), strides=(1,1),padding="same",activation='relu')(x)
 x=Conv2D(2,kernel_size=(3,3), strides=(1,1),padding="same",activation='relu')(x)
@@ -201,22 +210,25 @@ with open("output.csv", "r") as f:
 
 samp=samp.reshape(int(samp.shape[0]/256/256),256,256,1)
 result=result.reshape(int(result.shape[0]/256/256),256,256,1)
+'''
 samp-=32
 result-=32
 samp/=224
 result/=224
-
+'''
 '''
 neg=samp
 neg[neg>=32]=1
 neg[neg<32]=0
 neg=1-neg
 '''
+samp/=256
+result/=256
 
 #9.3 Set the epoch to 60. As the encoding part is already been trained, it should converge faster to user defined classes.  
 model.fit( samp, result,
            validation_data=(samp, result), 
-           epochs=25, 
+           epochs=50, 
            batch_size=1,
            callbacks=callbacks_list)
   
