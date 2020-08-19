@@ -252,8 +252,8 @@ model.fit( [diffxy,diffyz,diffzx,diffxy1,diffyz1,diffzx1,diffxy2,diffyz2,diffzx2
 model.save_weights(modelname + "_weight.hdf5")
 #print( model.predict(np.expand_dims(samp[1],axis=0)) )
 
-res_model=model.predict( np.expand_dims(samp[1],axis=0) ) 
-print(samp[1].shape,res_model[0].shape,result[1].shape)
+res_model=model.predict( np.expand_dims(samp[105],axis=0) ) 
+print(samp[105].shape,res_model[0].shape,result[1].shape)
 
 
 x=np.arange(256)
