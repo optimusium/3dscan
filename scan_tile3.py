@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Aug 20 08:21:04 2020
+
+@author: boonping
+"""
+
 import os,re
 
 import matplotlib.pyplot as plt
@@ -20,8 +27,10 @@ from keras.preprocessing.image import save_img
 from tensorflow.keras import backend
 
 
-model = load_model('map_network_classifier10.hdf5')
-model.load_weights("map_network_weight10.hdf5")
+#model = load_model('map_network_classifier15.hdf5')
+#model.load_weights("map_network_weight15.hdf5")
+model = load_model('map_network_classifier.hdf5')
+model.load_weights("map_network_weight.hdf5")
 
 from skimage.util import view_as_windows as viewW
 
@@ -44,8 +53,9 @@ def fill_zero_regions(a, kernel_size=3):
 
 slicesize=1024
 display=1
-for kk in range(0,468,20):
-    #opening pose file
+#for kk in range(0,468,20):
+for kk in range(0,10,1):
+    #opening pose file #GPS/IMU data
     inf0=open("scan%03i.pose" % kk,"r")
     pos0=inf0.readline().replace("\n","").replace(" ",",")
     pos0=np.array(eval("["+pos0+"]"))
@@ -423,12 +433,15 @@ for kk in range(0,468,20):
             #map2/=256
             map2=map2.reshape(map2.shape[0],map2.shape[1],1)
             res_model=model.predict(np.expand_dims(map2,axis=0))
+            
+            
             im=255*res_model[0][:,:,0] #.reshape(slicesize,slicesize,1)
-
+            im[im<64]=0
             
             im[map5>im]=map5[map5>im]
-            im=fill_zero_regions(im.astype('int'))
-            
+            im=im.astype('int')
+            #im=fill_zero_regions(im.astype('int'))
+            imsave("res%i_%i.png" %(ii+startx,jj+starty), im)
 
             poins1,poins3=np.nonzero(im)
             poins2=np.copy(im[np.nonzero(im)])
@@ -478,15 +491,18 @@ for kk in range(0,468,20):
             imb=np.copy(im)
             imc=np.copy(im)
             #print("929",ima[ima>65])
-            ima[ima<245]=0
-            ima[ima>0]=255
+            ima[ima<230]=0
+            #ima[ima>0]=255
 
             '''
             imb[imb<246]=0
             imb[imb>250]=0
             imb[imb>0]=255
             '''
-            imb[imb>0]=0
+            imb=np.zeros(im.shape)
+            #imb[imb>0]=0
+            #imb[imb<230]=0
+            '''
             aa=np.copy(imb)
             ab=np.abs(np.diff(aa,axis=0))
             bb=np.append(ab,np.zeros((1,ab.shape[1])),axis=0)
@@ -511,7 +527,8 @@ for kk in range(0,468,20):
             cc[aa<64]=0
             imb[bb>5]=246
             imb[cc>5]=246
-
+            '''
+            
             '''
             a=np.abs(np.diff(imb))
             b=np.append(a,np.zeros((a.shape[0],1)),axis=1)
@@ -531,21 +548,26 @@ for kk in range(0,468,20):
             '''
             #print("927",imb[imb>0].shape)
             
-            imc[(imc<65)]=0
+            imc[(imc<64)]=0
             imc[(imc>244)]=0
             imc[imc>0]=255-imc[imc>0]
             #print(imc[imc>0].shape)
-
+            '''
             ima[ima==0]=64
             imb[imb==0]=64
             imc[imc==0]=64
-
+            '''
             
             im2[:,:,0]=ima
             im2[:,:,1]=imb
             im2[:,:,2]=imc
 
             imsave("im%i_%i.png" % (ii+startx,jj+starty), im2)
+            
+            if ii+startx==0 and jj+starty==0:
+                #print(im[(ima==0) &( imc==0) & (im>64)])
+                print(np.max(imb[(ima==0)&(imc==0)]))
+                #raise
     
         #stitching
         xlist=[]
