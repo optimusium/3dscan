@@ -1,0 +1,41 @@
+practice model project
+
+
+1. Discussion
+
+   - Compare with k-means
+   - Compare ResNet
+   - Compare Optimization
+   - Compare with MCL, AMCL, Particle Filter
+The Monte Carlo Localization (MCL) is the most popular localization algorithms in robotics field. The MCL is also referred to as Particle Filter, and uses the particles to localize the robot’s pose. Each particle has its position and orientation which provide a chance for robot localization. Each time these particles are re-sampled when robot collects the sensor data from its environment. The Advanced Monte Carlo Localization (AMCL) is the improved version of MCL, since AMCL dynamically adjust the number of the particles over the period of time to achieve higher efficiency as the robot moves around the environment. In case the environment map is unknown, the AMCL does not perform well[6]. In open environments with less map features, the accuracy of ACML also decreases significantly [7]. Therefore, pre-loaded map with high accuracy is crutial to the accuracy of MCL and AMCL. The Keras neural network did not require the pre-loaded map, and will produce the map based 3D scan data and GPS. Due to the nural network training, the Keras nural network will reduce the errors caused in the 3D scan data and GPS. Therefore, the Keras nural network is more robust than MCL and ACML. The ACML is already integrared with many existing robot platform including Robot Operating System (ROS) with acml ROS package [12], but the Keras nural network is not integrared with any other robot platform. So ACML requires less time and effort to implement a solution with the exiting robot platform. 
+   
+2. Limitations
+
+The Keras neural network currently only processed 1024 x 1024 scope scan data at one time due to GPU power limitation. The processing GPU in use at the project is one Nvidia GTX 1080 graphics card. To improve accuarcy and speed of the Keras neural network, more powerful GPU resources are required.  
+
+The Keras neural network is not integrated with any existing robot platform such as Robot Operating System (ROS). Therefore, this causes the longer time and more efforts are required to implement a solution based on the Keras nural network.
+
+
+3. Future Work
+
+We implement the technique to combine multiple 1024 x 1024 processing data with reduced edge errors. The technique can be further improved by optimizing with different padding size and processing data scope size. 
+
+To reduce the GPU power requirement, MobileNetV2 structure is considered to implement the Keras neural network [8][9][10]. MobileNetV2 is lightweight deep neural network, contains fewer parameters comparing with tranditional ResNet network. MobileNetV2 is designed to work on the mobile platform, and reduce GPU powerer largely with acceptable accuracy loss [11]. This will increase the usage of the Keras neural network with reduced GPU power requirement and mobile platform support. 
+
+We consider to create the ROS packages to provide the integration and visualization with the Robot Operating System (ROS). This will reduce the time and effort greatly to implement a solution with ROS development environment. And we expect the usage of the Keras nural network will be greatly increased.
+
+
+4. Citation
+
+[8] Mark Sandler, Andrew Howard, Menglong Zhu, Andrey Zhmoginov, Liang-Chieh Chen (2018). Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR). https://openaccess.thecvf.com/content_cvpr_2018/html/Sandler_MobileNetV2_Inverted_Residuals_CVPR_2018_paper.html
+
+[9] A. G. Howard, M. Zhu, B. Chen et al. (2017). Mobilenets: efficient convolutional neural networks for mobile vision applications. https://arxiv.org/abs/1704.04861.
+
+[10] Yibin Huang,Congying Qiu,Xiaonan Wang,Shijun Wang,and Kui Yuan (2020). A Compact Convolutional Neural Network for Surface Defect Inspection. https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7180441/.
+
+[11] Simone Bianco, Remi Cadene, Luigi Celona, and Paolo Napoletano (2017). Benchmark Analysis of Representative Deep Neural Network Architectures. https://arxiv.org/pdf/1810.00736.pdf
+
+[12] Brian P. Gerkey (2020). acml Package Summary. http://wiki.ros.org/amcl
+
+[13] Tim Stahl, Alexander Wischnewski, Johannes Betz, and Markus Lienkamp (2019). ROS-based localization of a race vehicle at high-speed using LIDAR. https://www.e3s-conferences.org/articles/e3sconf/pdf/2019/21/e3sconf_icpeme2018_04002.pdf
+
