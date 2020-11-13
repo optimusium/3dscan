@@ -12,7 +12,7 @@ from scipy.ndimage.interpolation import rotate
 from skimage.draw import line_aa
 from skimage.draw import polygon
 
-siz=2
+siz=16
 samp=np.array([])
 result=np.array([])
 
@@ -1140,7 +1140,7 @@ samp=np.array([])
 result=np.array([])
 '''
 
-'''
+
 with open("input.csv", "r") as f:
     samp=np.loadtxt(f)
 with open("output.csv", "r") as f:
@@ -1151,4 +1151,3 @@ result=result.reshape(int(result.shape[0]/256/256),256,256)
 print(samp.shape,result.shape)
 samp=np.array([])
 result=np.array([])
-'''
